@@ -26,7 +26,7 @@ def upgrade() -> None:
                type_=sa.Integer(),
                existing_nullable=False,
                autoincrement=True)
-    
+
     # ### end Alembic commands ###
 
 
