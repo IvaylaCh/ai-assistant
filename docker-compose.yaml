@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16          # официалният PostgreSQL image
+    container_name: hospital_db
+    environment:
+      POSTGRES_USER: hospital_user      # потребител за базата
+      POSTGRES_PASSWORD: hospital_pass  # парола — в реален проект използвай .env!
+      POSTGRES_DB: hospital_db          # името на базата данни
+    ports:
+      - "5433:5432"   # порт на компютъра : порт в контейнера
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # данните се пазят между рестарти
+
+volumes:
+  postgres_data:

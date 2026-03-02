@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="bg">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Табло с часове</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-light">
+    <div class="container py-5" style="max-width: 960px">
+      <h1 class="mb-1">Табло с часове</h1>
+      <p class="text-muted mb-4">Търсете записани часове по ЕГН на пациента.</p>
+
+      <!-- Форма за търсене -->
+      <form method="get" action="/appointments/view" class="mb-4">
+        <div class="input-group">
+          <input
+            type="text"
+            name="egn"
+            class="form-control"
+            placeholder="Въведете ЕГН (10 цифри)"
+            value="{{ egn or '' }}"
+            maxlength="10"
+            required
+          />
+          <button class="btn btn-primary" type="submit">Търси</button>
+        </div>
+      </form>
+
+      <!-- Резултати -->
+      {% if egn is not none %}
+        {% if appointments %}
+        <p class="text-muted">
+          Намерени <strong>{{ appointments | length }}</strong> активни час(а) за
+          ЕГН <strong>{{ egn }}</strong>.
+        </p>
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover bg-white">
+            <thead class="table-dark">
+              <tr>
+                <th>#</th>
+                <th>Пациент</th>
+                <th>ЕГН</th>
+                <th>Телефон</th>
+                <th>Лекар (ID)</th>
+                <th>Начало</th>
+                <th>Край</th>
+                <th>Статус</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for appt in appointments %}
+              <tr>
+                <td>{{ appt.id }}</td>
+                <td>{{ appt.patient_name }}</td>
+                <td>{{ appt.patient_egn }}</td>
+                <td>{{ appt.patient_phone }}</td>
+                <td>{{ appt.doctor_id }}</td>
+                <td>{{ appt.start_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                <td>{{ appt.end_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                <td>
+                  <span
+                    class="badge
+                      {% if appt.status.value == 'ЗАПИСАН' %}bg-success
+                      {% elif appt.status.value == 'ОТМЕНЕН' %}bg-danger
+                      {% else %}bg-secondary{% endif %}"
+                  >
+                    {{ appt.status.value }}
+                  </span>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="alert alert-warning">
+          Няма активни часове за ЕГН <strong>{{ egn }}</strong>.
+        </div>
+        {% endif %}
+      {% endif %}
+    </div>
+  </body>
+</html>
