@@ -85,5 +85,13 @@ async def vapi_webhook(request: Request, db: Session = Depends(get_db)):
 
         return {"results": results}
 
+    if msg_type == "function-call":
+        func_call = message.get("functionCall", {})
+        name = func_call.get("name", "")
+        args = func_call.get("parameters", {})
+
+        result = _handle_tool(name, args, db)
+        return {"result": result}
+
     # Vapi изпраща и други типове (start, end, transcript) — просто ги игнорираме
     return {}
