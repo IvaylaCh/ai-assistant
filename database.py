@@ -8,6 +8,8 @@ load_dotenv()
 
 # Взима DATABASE_URL от .env
 DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL environment variable is not set")
 
 # Създава "engine" — връзката към PostgreSQL
 # pool_pre_ping=True означава "проверявай дали връзката е жива преди всяка заявка"

@@ -21,3 +21,8 @@ app = FastAPI(title="AI Телефонен Рецепционист")
 app.include_router(doctors_router)
 app.include_router(appointments_router)
 app.include_router(vapi_router)
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
