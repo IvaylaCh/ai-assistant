@@ -29,6 +29,24 @@ def appointments_view(request: Request, egn: str | None = None, db: Session = De
     })
 
 
+@router.get("/api/appointments")
+def list_appointments(db: Session = Depends(get_db)):
+    from models.models import Appointment
+    appointments = db.query(Appointment).order_by(Appointment.start_at.desc()).limit(50).all()
+    return [
+        {
+            "id": a.id,
+            "patient_name": a.patient_name,
+            "patient_egn": a.patient_egn,
+            "patient_phone": a.patient_phone,
+            "doctor_id": a.doctor_id,
+            "start_at": a.start_at.isoformat(),
+            "status": a.status,
+        }
+        for a in appointments
+    ]
+
+
 @router.post("/api/availability")
 def availability(body: AvailabilityRequest, db: Session = Depends(get_db)):
     slots = get_available_slots(db, body.doctor_id, body.from_date, body.to_date)
