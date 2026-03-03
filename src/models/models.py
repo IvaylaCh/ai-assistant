@@ -47,7 +47,7 @@ class Appointment(Base):
     patient_name = Column(String(100), nullable=False)
     start_at = Column(DateTime, nullable=False)
     end_at = Column(DateTime, nullable=False)
-    status = Column(Enum(AppointmentStatus), default=AppointmentStatus.BOOKED)
+    status = Column(Enum(AppointmentStatus, values_callable=lambda x: [e.value for e in x]), default=AppointmentStatus.BOOKED)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     doctor = relationship("Doctor", back_populates="appointments")
